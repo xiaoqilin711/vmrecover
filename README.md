@@ -1,8 +1,17 @@
 # vmrecover
 
+[![CI](https://github.com/xiaoqilin711/vmrecover/actions/workflows/ci.yml/badge.svg)](https://github.com/xiaoqilin711/vmrecover/actions/workflows/ci.yml)
+
 **Semantic recovery tooling for bytecode VMs — disassemble a custom VM's bytecode and fold out the constants it hides.**
 
 [English](README.md) | [中文](README.zh-CN.md)
+
+> **The proof, in one line:** where black-box emulation (unidbg) could only watch a protected signing library's VM from the outside and never match standard SHA-256, reading its bytecode directly recovered all 8 hidden IV words — **8/8 signature match**.
+
+| Route | What it sees | Result |
+|-------|--------------|--------|
+| unidbg emulation | VM inputs/outputs only | no match against standard SHA-256 |
+| **vmrecover** | instruction immediates | recovered 8 SHA-256 IV words, **8/8 match** |
 
 A common anti-analysis trick in protected native binaries is to move the interesting algorithm into a custom bytecode VM: the real hash/cipher isn't a normal function, it's self-decrypting bytecode run by a hand-written interpreter. Black-box approaches (unidbg emulation, runtime hooking) see only the VM's inputs and outputs — never the obfuscated constants that live *inside instruction immediates*.
 

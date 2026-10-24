@@ -1,8 +1,17 @@
 # vmrecover
 
+[![CI](https://github.com/xiaoqilin711/vmrecover/actions/workflows/ci.yml/badge.svg)](https://github.com/xiaoqilin711/vmrecover/actions/workflows/ci.yml)
+
 **字节码 VM 的语义还原工具集——反汇编自定义 VM 的字节码，并折叠出它藏起来的常量。**
 
 [English](README.md) | [中文](README.zh-CN.md)
+
+> **一句话证据：** 黑盒模拟（unidbg）只能从外部观察受保护签名库的 VM，永远匹配不上标准 SHA-256；直接读它的字节码，还原出全部 8 个被藏起来的 IV —— **8/8 签名命中**。
+
+| 路线 | 能看到什么 | 结果 |
+|------|-----------|------|
+| unidbg 模拟 | 只有 VM 输入输出 | 对不上标准 SHA-256 |
+| **vmrecover** | 指令立即数 | 还原 8 个 SHA-256 IV，**8/8 命中** |
 
 加固后的 native 二进制里，一个常见的反分析套路是：把关键算法搬进一台自定义字节码 VM——真正的哈希/加密不再是普通函数，而是一段自解密字节码，由手写的解释器执行。黑盒手段（unidbg 模拟、运行时 hook）只能看到 VM 的输入输出，永远看不到藏在**指令立即数里**的混淆常量。
 
